@@ -9,7 +9,7 @@ public class GameController : MonoBehaviour
     public GameObject[] hazards;
     public Vector3 spawnValues;
     public Text scoreText, restartText, gameOverText;
-    public int hazardCount;
+    public int hazardCount, enemyCount;
     public float spawnWait, startWait, waveWait;
     private int score;
     private bool gameover, restart;
@@ -23,27 +23,25 @@ public class GameController : MonoBehaviour
         this.gameOverText.text = "";
 
         this.UpdateScore();
-        StartCoroutine(this.SpanWaves());
+        StartCoroutine(this.SpawnWaves());
     }
 
     private void Update()
     {
-        if (restart)
-            if (Input.GetKeyDown(KeyCode.R))
-                SceneManager.LoadScene("Main");
+        if (restart && Input.GetKeyDown(KeyCode.R))
+            SceneManager.LoadScene("Main");
     }
 
-    private IEnumerator SpanWaves()
+    private IEnumerator SpawnWaves()
     {
         yield return new WaitForSeconds(startWait);
         while (true)
         {
             for (int i = 0; i < this.hazardCount; i++)
             {
-                GameObject hazard = hazards[Random.Range(0, hazards.Length)];
                 Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
                 Quaternion spawnRotation = Quaternion.identity;
-                Instantiate(hazard, spawnPosition, spawnRotation);
+                Instantiate(hazards[Random.Range(0, hazards.Length)], spawnPosition, spawnRotation);
                 yield return new WaitForSeconds(spawnWait);
             }
             yield return new WaitForSeconds(waveWait);

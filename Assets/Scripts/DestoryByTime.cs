@@ -5,7 +5,7 @@ using UnityEngine;
 public class DestoryByTime : MonoBehaviour
 {
     public float liftTime;
-    void Start()
+    private void Start()
     {
         Destroy(gameObject, liftTime);
     }

@@ -9,7 +9,7 @@ public class DestoryByContact : MonoBehaviour
     public int score;
     private GameController gameController;
 
-    void Start()
+    private void Start()
     {
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");
         if (gameControllerObject != null)
@@ -18,11 +18,12 @@ public class DestoryByContact : MonoBehaviour
             Debug.Log("Can not Find 'GameController' script.");
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Boundary") return;
-        Instantiate(explosion, transform.position, transform.rotation);
-        if (other.tag == "Player"){
+        if (other.CompareTag("Boundary") || other.CompareTag("Enemy")) return;
+        if (this.explosion) Instantiate(explosion, transform.position, transform.rotation);
+        if (other.CompareTag("Player"))
+        {
             Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
             this.gameController.GameOver();
         }
