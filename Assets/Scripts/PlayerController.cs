@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     private float nextFire;
     private new AudioSource audio;
     private new Rigidbody rigidbody;
+    private float accAmplifier = 3;
 
     private void Start()
     {
@@ -34,12 +35,15 @@ public class PlayerController : MonoBehaviour
             this.audio.Play();
         }
     }
-    
+
     private void FixedUpdate()
     {
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
+
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+        if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+            movement = new Vector3(Input.acceleration.x * accAmplifier, 0.0f, Input.acceleration.y * accAmplifier);
 
         this.rigidbody.velocity = movement * speed;
         this.rigidbody.position = new Vector3(

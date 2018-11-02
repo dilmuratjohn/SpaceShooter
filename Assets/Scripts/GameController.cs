@@ -7,22 +7,26 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
     public GameObject[] hazards;
+    public GameObject player;
     public Vector3 spawnValues;
-    public Text scoreText, restartText, gameOverText;
+    public Text scoreText, gameOverText, buttonText;
+    public Button startButton;
     public int hazardCount, enemyCount;
     public float spawnWait, startWait, waveWait;
     private int score;
     private bool gameover, restart;
 
-    private void Start()
+    public void Play()
     {
-        this.score = 0;
-        this.gameover = false;
         this.restart = false;
-        this.restartText.text = "";
-        this.gameOverText.text = "";
-
+        this.gameover = false;
+        this.score = 0;
+        this.startButton.gameObject.SetActive(false);
+        this.scoreText.gameObject.SetActive(true);
+        this.gameOverText.gameObject.SetActive(false);
+        this.player.gameObject.SetActive(true);
         this.UpdateScore();
+        Instantiate(this.player);
         StartCoroutine(this.SpawnWaves());
     }
 
@@ -30,6 +34,12 @@ public class GameController : MonoBehaviour
     {
         if (restart && Input.GetKeyDown(KeyCode.R))
             SceneManager.LoadScene("Main");
+    }
+
+    public void GameOver()
+    {
+        this.gameover = true;
+        this.gameOverText.gameObject.SetActive(true);
     }
 
     private IEnumerator SpawnWaves()
@@ -47,8 +57,9 @@ public class GameController : MonoBehaviour
             yield return new WaitForSeconds(waveWait);
             if (this.gameover)
             {
-                restartText.text = "Press 'R' to Restart";
+                this.buttonText.text = "Restart";
                 this.restart = true;
+                this.startButton.gameObject.SetActive(true);
                 break;
             }
         }
@@ -60,14 +71,8 @@ public class GameController : MonoBehaviour
         this.UpdateScore();
     }
 
-    public void GameOver()
-    {
-        this.gameover = true;
-        this.gameOverText.text = "Game Over";
-    }
-
     private void UpdateScore()
     {
-        this.scoreText.text = "Score: " + score;
+        this.scoreText.text = "Score: " + this.score;
     }
 }
